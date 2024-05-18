@@ -116,7 +116,7 @@ const Grid = ({ row, col }) => {
         })}
       </div>
       {/* hefe we weill show commands  */}
-      <div className="flex flex-1 justify-between align-middle -mt-80">
+      <div className="flex flex-1 justify-between align-middle -mt-40">
         <h1 className="text-center max-w-fit max-h-fit m-auto font-bold text-xl ">
           {commandDisplay()}
         </h1>
