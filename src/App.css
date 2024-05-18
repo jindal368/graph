@@ -1,0 +1,16 @@
+.square {
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  display: inline-block;
+}
+
+.fill {
+  background-color: blue; /* Change the color as needed */
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  grid-gap: 5px; /* Adjust gap between squares */
+}

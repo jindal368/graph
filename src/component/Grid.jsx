@@ -90,11 +90,11 @@ const Grid = ({ row, col }) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex flex-row justify-center mt-4 space-x-2 m-4s h-full">
+    <div className="flex flex-col h-full ">
+      <div className="flex flex-row justify-center mt-4 space-x-2 m-4s h-full p-4 pr-8 ">
         {cols.map((col, index) => {
           return (
-            <div key={index} className="h-16 w-16  border-black">
+            <div key={index} className="h-8 w-8  border-black">
               {rows.map((row, index) => {
                 return (
                   <div
@@ -104,10 +104,12 @@ const Grid = ({ row, col }) => {
                       backgroundColor: showColorGrid(row, col),
                       animation:
                         showColorGrid(row, col) === "orange" &&
-                        "fadeIn 0.5s forwards",
-                      transition: "background-color 0.5s ease-in-out",
+                        "fadeIn 2.5s forwards",
+
+                      transition: "background-color 0.5s ",
+                      animationFillMode: "revert-layer",
                     }}
-                    className="h-16 w-16 border-black bg-sky-400 p-4 m-4"
+                    className="h-8 w-8 border-black bg-sky-400 p-4 m-4 `square ${filled ? 'fill' : ''}`"
                   ></div>
                 );
               })}

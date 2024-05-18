@@ -14,79 +14,69 @@ const Dfs = (start, end, size, obs) => {
   return response;
 };
 
-function findPath(start, destination, grid) {
-  function heuristic(node) {
-    return (
-      Math.abs(node[0] - destination[0]) + Math.abs(node[1] - destination[1])
-    );
-  }
+function findPath(start, end, grid) {
+  const queue = [];
+  const visited = new Set();
+  const parents = {};
 
-  function isValidCell(row, col) {
-    return (
-      row >= 0 &&
-      row < grid.length &&
-      col >= 0 &&
-      col < grid[0].length &&
-      grid[row][col] === 0
-    );
-  }
+  const directions = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
+  ];
 
-  function aStar(start, destination) {
-    const openList = [];
-    const closedList = new Set();
-    const cameFrom = {};
+  queue.push(start);
+  visited.add(start.toString());
 
-    openList.push({
-      node: start,
-      g: 0,
-      h: heuristic(start),
-      f: heuristic(start),
-    });
+  // BFS traversal
+  while (queue.length > 0) {
+    const current = queue.shift();
 
-    while (openList.length > 0) {
-      openList.sort((a, b) => a.f - b.f);
-      const { node, g } = openList.shift();
-
-      if (node[0] === destination[0] && node[1] === destination[1]) {
-        return reconstructPath(cameFrom, node);
-      }
-
-      closedList.add(node.toString());
-
-      const neighbors = [
-        [node[0] - 1, node[1]],
-        [node[0] + 1, node[1]],
-        [node[0], node[1] - 1],
-        [node[0], node[1] + 1],
-      ];
-
-      for (const neighbor of neighbors) {
-        const [row, col] = neighbor;
-        if (isValidCell(row, col) && !closedList.has(neighbor.toString())) {
-          const gScore = g + 1;
-          const hScore = heuristic(neighbor);
-          const fScore = gScore + hScore;
-          openList.push({ node: neighbor, g: gScore, h: hScore, f: fScore });
-          cameFrom[neighbor.toString()] = node;
-        }
-      }
+    // Check if we've reached the end node
+    if (current[0] === end[0] && current[1] === end[1]) {
+      // Reconstruct the path
+      return reconstructPath(parents, start, end);
     }
 
-    return null;
-  }
+    // Explore neighbors
+    for (const [dx, dy] of directions) {
+      const neighbor = [current[0] + dx, current[1] + dy];
 
-  function reconstructPath(cameFrom, current) {
-    const path = [current];
-    while (cameFrom[current.toString()]) {
-      current = cameFrom[current.toString()];
-      path.unshift(current);
+      // Check if the neighbor is within bounds and not visited
+      if (
+        isValidCell(neighbor[0], neighbor[1], grid) &&
+        !visited.has(neighbor.toString())
+      ) {
+        queue.push(neighbor);
+        visited.add(neighbor.toString());
+        parents[neighbor.toString()] = current;
+      }
     }
-    return path;
   }
 
-  const path = aStar(start, destination);
+  // If no path found
+  return null;
+}
+function isValidCell(row, col, grid) {
+  return (
+    row >= 0 &&
+    row < grid.length &&
+    col >= 0 &&
+    col < grid[0].length &&
+    grid[row][col] === 0
+  );
+}
 
-  return path ? path : [];
+function reconstructPath(parents, start, end) {
+  const path = [];
+  let current = end;
+  while (current.toString() !== start.toString()) {
+    path.unshift(current);
+    current = parents[current.toString()];
+  }
+  path.unshift(start);
+  return path;
 }
 
 export default Dfs;
